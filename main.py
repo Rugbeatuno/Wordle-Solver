@@ -8,20 +8,20 @@ How to use:
 1) run the main.py
 2) play any starting 5 letter word 
 3) enter all gray letters in the row without spaces
-4) enter all yellow letters, use "-" as placeholders for gray or green letters Ex: --a--
-5) then do the same for green letters, apply same format as yellow (step 4)
+4) enter all orange letters, use "-" as placeholders for gray or green letters Ex: --a--
+5) then do the same for green letters, apply same format as orange (step 4)
 * Press Enter to skip any steps from 3-5
 '''
 
-length = 5
+length = 10
 with open('scrabble_words.txt', 'r') as f:
     words = f.readlines()
     words = [i.replace('\n', '') for i in words]
     words = [i for i in words if len(i) == length]
 
 invalid_letters = []
-greens = ['-' for i in range(5)]
-columns = [[] for i in range(5)]
+greens = ['-' for i in range(length)]
+columns = [[] for i in range(length)]
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 
@@ -52,7 +52,7 @@ def check():
     invalid_letters.extend(list(input('Gray in row (Ex:abc): ').lower()))
     invalid_letters = list(set(invalid_letters))
 
-    yellows = input('Yellows in row (Ex:-ab--): ').lower()
+    yellows = input('Orange in row (Ex:-ab--): ').lower()
     if yellows:
         for index, i in enumerate(yellows):
             if i in alphabet:
@@ -97,7 +97,7 @@ def check():
 
     # green check
     more_reductions = []
-    if len(greens) == 5:
+    if len(greens) == length:
         for word in reduced_list:
             for index, char in enumerate(word):
                 if greens[index] not in ['-', ' ', '.', char]:
@@ -108,10 +108,11 @@ def check():
 
     # output
     reduced_list = list(set(reduced_list))
+    reduced_list = reduced_list[:100] if len(reduced_list) > 100 else reduced_list
     print('\n' * 3 + '-' * 100)
     print(f'All possible answers ({len(reduced_list)}):', ', '.join(reduced_list))
     next_word()
     check()
 
-
+print('Word Length:', length)
 check()
