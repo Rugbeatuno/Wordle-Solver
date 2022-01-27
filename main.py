@@ -108,12 +108,15 @@ def check():
         reduced_list = more_reductions
 
     # output
+    max_list = 100
     reduced_list = list(set(reduced_list))
-    reduced_list = reduced_list[:100] if len(reduced_list) > 100 else reduced_list
+    reduced_list = reduced_list[:max_list] if len(reduced_list) > max_list else reduced_list
     print('\n' * 3 + '-' * 100)
-    print(f'All possible answers ({len(reduced_list)}):', ', '.join(reduced_list))
+    print(f'All possible answers ({len(reduced_list)}{"+" if len(reduced_list) > max_list else ""}):',
+          ', '.join(reduced_list))
     next_word()
     check()
+
 
 print('Word Length:', length)
 check()
