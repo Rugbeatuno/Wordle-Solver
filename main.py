@@ -50,7 +50,7 @@ def check():
     reduced_list = []
 
     print()
-    invalid_letters.extend(list(input('Gray in row (Ex:abc): ').lower()))
+    invalid_letters.extend(list(input('Gray in row (Ex:abc):     ').lower()))
     invalid_letters = list(set(invalid_letters))
 
     yellows = input('Orange in row (Ex:-ab--): ').lower()
@@ -112,7 +112,7 @@ def check():
     reduced_list = list(set(reduced_list))
     reduced_list = reduced_list[:max_list] if len(reduced_list) > max_list else reduced_list
     print('\n' * 3 + '-' * 100)
-    print(f'All possible answers ({len(reduced_list)}{"+" if len(reduced_list) > max_list else ""}):',
+    print(f'All possible answers ({len(reduced_list)}{"+" if len(reduced_list) == max_list else ""}):',
           ', '.join(reduced_list))
     next_word()
     check()
