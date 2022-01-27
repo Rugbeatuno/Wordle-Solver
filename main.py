@@ -13,7 +13,8 @@ How to use:
 * Press Enter to skip any steps from 3-5
 '''
 
-length = 10
+length = input('Enter word length(default=5): ') or 5
+length = int(length)
 with open('scrabble_words.txt', 'r') as f:
     words = f.readlines()
     words = [i.replace('\n', '') for i in words]
