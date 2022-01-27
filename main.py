@@ -50,7 +50,7 @@ def check():
     reduced_list = []
 
     print()
-    invalid_letters.extend(list(input('Gray in row (Ex:abc):     ').lower()))
+    invalid_letters.extend(list(input('Gray in row     (Ex:abc): ').lower()))
     invalid_letters = list(set(invalid_letters))
 
     yellows = input('Orange in row (Ex:-ab--): ').lower()
