@@ -20,26 +20,58 @@ with open('scrabble_words.txt', 'r') as f:
     words = [i.replace('\n', '') for i in words]
     words = [i for i in words if len(i) == length]
 
+with open('legal.txt', 'r') as f:
+    legal = f.readlines()
+    legal = [i.replace('\n', '') for i in words]
+
 invalid_letters = []
 greens = ['-' for i in range(length)]
 columns = [[] for i in range(length)]
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 
-def next_word():
-    remaining_letters = [i for i in alphabet if i not in invalid_letters and i not in greens]
-    combos = get_combos(''.join(remaining_letters))
-    combos = [i for i in combos if i[1] == length]
-    if not combos:
-        r = [i for i in alphabet if i not in greens]
-        combos = get_combos(''.join(r))
-        combos = [i for i in combos if i[1] == length]
+# def next_word(possible_words):
+#
+#
+#     remaining_letters = [i for i in alphabet if i not in invalid_letters and i not in greens]
+#     combos = get_combos(''.join(remaining_letters))
+#     combos = [i for i in combos if i[1] == length]
+#     if not combos:
+#         r = [i for i in alphabet if i not in greens]
+#         combos = get_combos(''.join(r))
+#         combos = [i for i in combos if i[1] == length]
+#
+#     combos = [i[0] for i in combos]
+#     ranked = []
+#     for combo in combos:
+#         score = sum(char in remaining_letters for char in combo)
+#         ranked.append((combo, score))
+#
+#     # ranked = add_weighted(possible_words, ranked)
+#     ranked = sorted(ranked, key=lambda i: i[1])  # worst to best
+#     top = [i[0] for i in ranked[-5:]]
+#     print(f'Recommended next moves: {", ".join(top)}')
+#
 
-    combos = [i[0] for i in combos]
+
+
+def next_move(possible_words):
+    indexes = []
+    for index in range(length):
+        index_letter_occurrences = {}
+        for word in possible_words:
+            char = word[index]
+            if char not in index_letter_occurrences:
+                index_letter_occurrences[char] = 0
+            index_letter_occurrences[char] += 1
+
+        occurrences = sorted(list(index_letter_occurrences.items()), key=lambda i: i[1])
+        indexes.append(dict(occurrences))
+
     ranked = []
-    for combo in combos:
-        score = sum(char in remaining_letters for char in combo)
-        ranked.append((combo, score))
+    for word in possible_words:
+        score = sum(indexes[index][char] for index, char in enumerate(word))
+        ranked.append((word, score))
     ranked = sorted(ranked, key=lambda i: i[1])  # worst to best
     top = [i[0] for i in ranked[-5:]]
     print(f'Recommended next moves: {", ".join(top)}')
@@ -59,12 +91,18 @@ def check():
             if i in alphabet:
                 columns[index].append(i)
             columns[index] = list(set(columns[index]))
+            if i in invalid_letters:
+                invalid_letters.remove(i)
 
     row_greens = input('Greens in row (Ex:a---b): ').lower()
     if row_greens:
         for index, i in enumerate(row_greens):
             if i in alphabet:
                 greens[index] = i
+            if i in invalid_letters:
+                invalid_letters.remove(i)
+
+
 
     # must haves are all yellow tiles
     must_haves = []
@@ -110,11 +148,12 @@ def check():
     # output
     max_list = 100
     reduced_list = list(set(reduced_list))
+    reduced_list = [i for i in reduced_list if i in legal]
     reduced_list = reduced_list[:max_list] if len(reduced_list) > max_list else reduced_list
     print('\n' * 3 + '-' * 100)
     print(f'All possible answers ({len(reduced_list)}{"+" if len(reduced_list) == max_list else ""}):',
           ', '.join(reduced_list))
-    next_word()
+    next_move(reduced_list)
     check()
 
 
