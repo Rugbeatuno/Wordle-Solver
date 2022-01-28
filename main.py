@@ -146,7 +146,7 @@ def check():
         reduced_list = more_reductions
 
     # output
-    max_list = 100
+    max_list = 30
     reduced_list = list(set(reduced_list))
     reduced_list = [i for i in reduced_list if i in legal]
     list_length = len(reduced_list)
