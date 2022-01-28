@@ -149,10 +149,10 @@ def check():
     max_list = 100
     reduced_list = list(set(reduced_list))
     reduced_list = [i for i in reduced_list if i in legal]
+    list_length = len(reduced_list)
     reduced_list = reduced_list[:max_list] if len(reduced_list) > max_list else reduced_list
     print('\n' * 3 + '-' * 100)
-    print(f'All possible answers ({len(reduced_list)}{"+" if len(reduced_list) == max_list else ""}):',
-          ', '.join(reduced_list))
+    print(f'All possible answers ({list_length}):', ', '.join(reduced_list))
     next_move(reduced_list)
     check()
 
