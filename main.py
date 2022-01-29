@@ -77,7 +77,7 @@ def next_move(possible_words):
     print(f'Recommended next moves: {", ".join(top)}')
 
 
-def check():
+def check(remaining_words):
     global invalid_letters
     reduced_list = []
 
@@ -101,6 +101,7 @@ def check():
                 greens[index] = i
             if i in invalid_letters:
                 invalid_letters.remove(i)
+                print(invalid_letters)
 
 
 
@@ -111,7 +112,7 @@ def check():
             must_haves.append(i)
 
     # invalid word check and must have check
-    for word in words:
+    for word in remaining_words:
         for invalid in invalid_letters:
             if invalid in word:
                 break
@@ -148,14 +149,14 @@ def check():
     # output
     max_list = 30
     reduced_list = list(set(reduced_list))
-    reduced_list = [i for i in reduced_list if i in legal]
-    list_length = len(reduced_list)
+    full_list = [i for i in reduced_list if i in legal]
+    list_length = len(full_list)
     reduced_list = reduced_list[:max_list] if len(reduced_list) > max_list else reduced_list
     print('\n' * 3 + '-' * 100)
     print(f'All possible answers ({list_length}):', ', '.join(reduced_list))
-    next_move(reduced_list)
-    check()
+    next_move(full_list)
+    check(full_list)
 
 
 print('Word Length:', length)
-check()
+check(words)
