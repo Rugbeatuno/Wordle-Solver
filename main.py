@@ -22,11 +22,12 @@ with open('scrabble_words.txt', 'r') as f:
 
 with open('legal.txt', 'r') as f:
     legal = f.readlines()
-    legal = [i.replace('\n', '') for i in words]
+    legal = [i.replace('\n', '') for i in legal]
 
 invalid_letters = []
 greens = ['-' for i in range(length)]
 columns = [[] for i in range(length)]
+next_moves_ = []
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 
@@ -56,6 +57,8 @@ alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 
 def next_move(possible_words):
+    global next_moves_
+
     indexes = []
     for index in range(length):
         index_letter_occurrences = {}
@@ -73,19 +76,18 @@ def next_move(possible_words):
         score = sum(indexes[index][char] for index, char in enumerate(word))
         ranked.append((word, score))
     ranked = sorted(ranked, key=lambda i: i[1])  # worst to best
-    top = [i[0] for i in ranked[-5:]]
-    print(f'Recommended next moves: {", ".join(top)}')
+    next_moves_ = [i[0] for i in ranked[-5:]]
+    if __name__ == '__main__':
+        print(f'Recommended next moves: {", ".join(next_moves_)}')
 
 
-def check(remaining_words):
+def get_user_input(grays_='', yellows_='', greens_=''):
     global invalid_letters
-    reduced_list = []
 
-    print()
-    invalid_letters.extend(list(input('Gray in row     (Ex:abc): ').lower()))
+    invalid_letters.extend(list((input('Gray in row     (Ex:abc): ').lower() if not grays_ else grays_.lower())))
     invalid_letters = list(set(invalid_letters))
 
-    yellows = input('Orange in row (Ex:-ab--): ').lower()
+    yellows = input('Orange in row (Ex:-ab--): ').lower() if not yellows_ else yellows_.lower()
     if yellows:
         for index, i in enumerate(yellows):
             if i in alphabet:
@@ -94,16 +96,22 @@ def check(remaining_words):
             if i in invalid_letters:
                 invalid_letters.remove(i)
 
-    row_greens = input('Greens in row (Ex:a---b): ').lower()
+    row_greens = input('Greens in row (Ex:a---b): ').lower() if not greens_ else greens_.lower()
     if row_greens:
         for index, i in enumerate(row_greens):
             if i in alphabet:
                 greens[index] = i
             if i in invalid_letters:
                 invalid_letters.remove(i)
-                print(invalid_letters)
 
 
+def check(remaining_words):
+    global invalid_letters
+    reduced_list = []
+
+    if __name__ == '__main__':
+        print()
+        get_user_input()
 
     # must haves are all yellow tiles
     must_haves = []
@@ -152,11 +160,18 @@ def check(remaining_words):
     full_list = [i for i in reduced_list if i in legal]
     list_length = len(full_list)
     reduced_list = reduced_list[:max_list] if len(reduced_list) > max_list else reduced_list
-    print('\n' * 3 + '-' * 100)
-    print(f'All possible answers ({list_length}):', ', '.join(reduced_list))
-    next_move(full_list)
-    check(full_list)
+    if __name__ == '__main__':
+        print('\n' * 3 + '-' * 100)
+        print(f'All possible answers ({list_length}):', ', '.join(reduced_list))
+
+        next_move(full_list)
+        check(full_list)
+    else:
+        next_move(full_list)
+        return next_moves_, full_list
 
 
-print('Word Length:', length)
-check(words)
+
+if __name__ == '__main__':
+    print('Word Length:', length)
+    check(words)
